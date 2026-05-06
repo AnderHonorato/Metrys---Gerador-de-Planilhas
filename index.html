@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Metrys Planilhas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="estilos.css" />
+</head>
+<body>
+
+  <div class="app-wrap">
+
+    <!-- Barra de titulo personalizada -->
+    <div class="titlebar">
+      <div class="tb-left">
+        <span class="tb-dot" id="status-dot"></span>
+        <span class="tb-status" id="status-text">Pronto</span>
+      </div>
+      <div class="tb-right">
+        <button class="tb-btn" onclick="minimizar()">&#x2500;</button>
+        <button class="tb-btn" id="max-btn" onclick="maximizar()">&#x25A1;</button>
+        <button class="tb-btn close" onclick="fechar()">&#x2715;</button>
+      </div>
+    </div>
+
+    <div class="app">
+
+      <!-- Barra lateral de conversas -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-top">
+          <div class="brand">
+            <span class="brand-name">Metrys</span>
+            <span class="brand-sub">Planilhas</span>
+          </div>
+          <button class="new-btn" onclick="novaConversa()">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Novo
+          </button>
+        </div>
+
+        <div class="sidebar-scroll">
+          <div class="sidebar-section">Conversas</div>
+          <div id="conv-list"></div>
+        </div>
+
+        <!-- Botao de gerar planilha rapido na lateral -->
+        <div class="sidebar-bottom">
+          <div class="sidebar-section">Bot Planilha</div>
+          <button class="quick-btn-side" id="quick-generate" disabled onclick="gerarPlanilhaRapida()">Gerar planilha</button>
+          <span class="file-count-side" id="file-count-side">Nenhum arquivo</span>
+        </div>
+
+        <div class="sidebar-user" id="user-menu-wrap" onclick="toggleUserMenu()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          <div class="user-info">
+            <span class="user-name">Anderson Honorato</span>
+            <span class="user-server-status">Metrys Planilhas</span>
+          </div>
+          <span class="user-chev">&#x25BC;</span>
+          <div class="fm" id="fm">
+            <div class="fm-item" onclick="abrirLinks();event.stopPropagation()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              Links do Criador
+            </div>
+            <div class="fm-item" onclick="abrirConfiguracoes();event.stopPropagation()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4a1.65 1.65 0 0 0-1 .6 1.65 1.65 0 0 0-.33 1.82V22a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 20.4a1.65 1.65 0 0 0-1.82-.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-.6-1 1.65 1.65 0 0 0-1.82-.33H2a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 3.6 9a1.65 1.65 0 0 0 .33-1.82l-.06-.06A2 2 0 1 1 6.7 4.3l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-.6 1.65 1.65 0 0 0 .33-1.82V2a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15 3.6a1.65 1.65 0 0 0 1.82.33l.06-.06A2 2 0 1 1 19.7 6.7l-.06.06A1.65 1.65 0 0 0 19.4 9c.14.32.35.6.6.82.5.43 1.15.61 1.82.51H22a2 2 0 1 1 0 4h-.09A1.65 1.65 0 0 0 20.4 15z"/></svg>
+              Configuracoes
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Painel de configuracoes (sobrepoe a sidebar) -->
+      <aside class="config-sidebar" id="config-sidebar">
+        <div class="config-sidebar-top">
+          <div class="brand">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4a1.65 1.65 0 0 0-1 .6 1.65 1.65 0 0 0-.33 1.82V22a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 20.4a1.65 1.65 0 0 0-1.82-.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-.6-1 1.65 1.65 0 0 0-1.82-.33H2a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 3.6 9a1.65 1.65 0 0 0 .33-1.82l-.06-.06A2 2 0 1 1 6.7 4.3l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-.6 1.65 1.65 0 0 0 .33-1.82V2a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15 3.6a1.65 1.65 0 0 0 1.82.33l.06-.06A2 2 0 1 1 19.7 6.7l-.06.06A1.65 1.65 0 0 0 19.4 9c.14.32.35.6.6.82.5.43 1.15.61 1.82.51H22a2 2 0 1 1 0 4h-.09A1.65 1.65 0 0 0 20.4 15z"/></svg>
+            <span class="brand-name" style="font-size:13px">Configuracoes</span>
+          </div>
+          <button class="config-fechar-btn" onclick="fecharConfiguracoes()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="config-sidebar-scroll">
+          <div class="config-sidebar-item ativo" onclick="abrirSecaoConfig('tema')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/><path d="M2 12h20"/></svg>
+            Aparencia
+          </div>
+          <div class="config-sidebar-item" onclick="abrirSecaoConfig('apis')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+            APIs de IA
+          </div>
+          <div class="config-sidebar-item" onclick="abrirSecaoConfig('sobre')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Sobre
+          </div>
+        </div>
+      </aside>
+
+      <!-- Area principal -->
+      <main class="main" id="main-view">
+        <div class="header">
+          <div class="header-left">
+            <button class="h-btn" onclick="alternarSidebar()" title="Barra lateral">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.8"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+            <span class="conv-title" id="conv-title">Nova conversa</span>
+          </div>
+          <div class="header-right">
+            <button class="h-btn" id="btn-preview" onclick="alternarPainel()" title="Painel lateral">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Area de mensagens -->
+        <div class="msg-area" id="msg-area">
+          <div class="msg-inner" id="msg-inner"></div>
+        </div>
+
+        <!-- Painel de conteudo de configuracoes (sobrepoe o chat) -->
+        <div class="config-conteudo" id="config-conteudo">
+          <div class="config-conteudo-inner">
+            <h2 class="config-secao-titulo" id="config-secao-titulo">Aparencia</h2>
+
+            <!-- Secao: Tema -->
+            <div class="config-secao" id="secao-tema">
+              <label class="config-label">Tema</label>
+              <div class="config-options">
+                <label><input type="radio" name="tema-config" value="dark" checked> Escuro</label>
+                <label><input type="radio" name="tema-config" value="light"> Branco</label>
+              </div>
+            </div>
+
+            <!-- Secao: APIs -->
+            <div class="config-secao" id="secao-apis" style="display:none">
+              <p class="config-desc">Insira a chave da API caso deseje usar uma IA diferente:</p>
+
+              <div class="api-campo" id="campo-api-spiderx">
+                <label class="config-label">API Key (Metrys)</label>
+                <div class="api-campo-linha">
+                  <div class="api-input-wrap">
+                    <input class="config-input api-input" id="api-key-spiderx" type="password" placeholder="Chave SpiderX" />
+                    <button class="api-olho" onclick="alternarVisibilidadeSenha('api-key-spiderx', this)" title="Mostrar/ocultar chave">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </div>
+                  <button class="api-btn-validar" id="btn-validar-spiderx" onclick="validarAPI('spiderx')">Validar</button>
+                  <span class="api-status" id="status-api-spiderx"></span>
+                </div>
+              </div>
+
+              <div class="api-campo" id="campo-api-google">
+                <label class="config-label">Google Gemini</label>
+                <div class="api-campo-linha">
+                  <div class="api-input-wrap">
+                    <input class="config-input api-input" id="api-key-google" type="password" placeholder="Chave Google AI Studio" />
+                    <button class="api-olho" onclick="alternarVisibilidadeSenha('api-key-google', this)" title="Mostrar/ocultar chave">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </div>
+                  <button class="api-btn-validar" id="btn-validar-google" onclick="validarAPI('google')">Validar</button>
+                  <span class="api-status" id="status-api-google"></span>
+                </div>
+              </div>
+
+              <div class="api-campo" id="campo-api-deepseek">
+                <label class="config-label">DeepSeek</label>
+                <div class="api-campo-linha">
+                  <div class="api-input-wrap">
+                    <input class="config-input api-input" id="api-key-deepseek" type="password" placeholder="Chave DeepSeek API" />
+                    <button class="api-olho" onclick="alternarVisibilidadeSenha('api-key-deepseek', this)" title="Mostrar/ocultar chave">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </div>
+                  <button class="api-btn-validar" id="btn-validar-deepseek" onclick="validarAPI('deepseek')">Validar</button>
+                  <span class="api-status" id="status-api-deepseek"></span>
+                </div>
+              </div>
+
+              <div class="api-campo" id="campo-api-claude">
+                <label class="config-label">Claude (Anthropic)</label>
+                <div class="api-campo-linha">
+                  <div class="api-input-wrap">
+                    <input class="config-input api-input" id="api-key-claude" type="password" placeholder="Chave Anthropic API" />
+                    <button class="api-olho" onclick="alternarVisibilidadeSenha('api-key-claude', this)" title="Mostrar/ocultar chave">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </div>
+                  <button class="api-btn-validar" id="btn-validar-claude" onclick="validarAPI('claude')">Validar</button>
+                  <span class="api-status" id="status-api-claude"></span>
+                </div>
+              </div>
+
+              <div class="api-campo" id="campo-api-gpt">
+                <label class="config-label">ChatGPT (OpenAI)</label>
+                <div class="api-campo-linha">
+                  <div class="api-input-wrap">
+                    <input class="config-input api-input" id="api-key-gpt" type="password" placeholder="Chave OpenAI API" />
+                    <button class="api-olho" onclick="alternarVisibilidadeSenha('api-key-gpt', this)" title="Mostrar/ocultar chave">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </div>
+                  <button class="api-btn-validar" id="btn-validar-gpt" onclick="validarAPI('gpt')">Validar</button>
+                  <span class="api-status" id="status-api-gpt"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Secao: Sobre -->
+            <div class="config-secao" id="secao-sobre" style="display:none">
+              <div class="sobre-card">
+                <div class="sobre-logo">Metrys Planilhas</div>
+                <p class="sobre-versao">Versao 1.0.0</p>
+                <p class="sobre-texto">Bot local com IA integrada para geracao de planilhas Excel a partir de arquivos PDF, imagens e etiquetas.</p>
+                <p class="sobre-texto">Desenvolvido por <strong>Anderson Honorato</strong></p>
+                <button class="small-btn" onclick="abrirLinks()" style="margin-top:10px">Links do Criador</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="config-conteudo-rodape">
+            <button class="small-btn" onclick="fecharConfiguracoes()">Cancelar</button>
+            <button class="small-btn principal" onclick="salvarConfiguracoes()">Salvar</button>
+          </div>
+          <div class="config-status" id="config-status"></div>
+        </div>
+
+        <!-- Area de entrada -->
+        <div class="input-area" id="input-area">
+          <div class="input-wrap">
+            <div class="pending-files" id="pending-files"></div>
+            <div class="input-box">
+              <textarea class="chat-input" id="chat-inp" rows="1" placeholder="Mensagem para o Metrys..." onkeydown="tratarTecla(event)" oninput="redimensionar(this);atualizarEnvio()"></textarea>
+              <div class="input-toolbar">
+                <div class="toolbar-left">
+                  <!-- Seletor de modelo de IA -->
+                  <div class="drop-wrap" id="model-wrap">
+                    <button class="drop-pill" onclick="alternarDrop('model-dd')">
+                      <span class="drop-dot" style="background:var(--coral)"></span>
+                      <span id="model-lbl">Metrys Pro</span>
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="dropdown" id="model-dd"></div>
+                  </div>
+                  <!-- Botao anexar arquivo -->
+                  <div class="drop-wrap" id="tools-wrap">
+                    <button class="drop-pill" onclick="alternarDrop('tools-dd')">Mais</button>
+                    <div class="dropdown tools-menu" id="tools-dd">
+                      <div class="drop-item" onclick="selecionarArquivos();fecharDrops()">Anexar arquivo</div>
+                      <div class="drop-item" onclick="gerarPlanilhaRapida();fecharDrops()">Gerar planilha do arquivo</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="toolbar-right">
+                  <button class="send-btn" id="send-btn" disabled onclick="enviarMsg()" title="Enviar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="footer-tip">O Metrys pode cometer erros.</div>
+          </div>
+        </div>
+      </main>
+
+        <!-- Painel lateral direito (atividade compartilhada: progresso e pensamento) -->
+        <div class="preview-panel" id="preview-panel">
+          <div class="preview-header">
+            <div class="preview-tabs" id="preview-tabs">
+              <button class="ptab ativo" onclick="alternarAba('atividade')">Atividade</button>
+            </div>
+          <button class="p-close" onclick="alternarPainel()" title="Fechar painel">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          </div>
+          <div class="preview-content">
+          <div class="ppane ativo" id="pane-atividade">
+            <div class="p-empty" id="atividade-empty">Aqui aparece o pensamento da IA e o progresso da planilha em um unico card.</div>
+            <div class="atividade-pensamento" id="atividade-pensamento" style="display:none"></div>
+            <div class="atividade-processo-label" id="atividade-processo-label" style="display:none">Processo</div>
+            <div class="process-log" id="process-log" style="display:none"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal de opcoes do arquivo (popup) -->
+  <div class="modal-overlay" id="modal-opcoes-arquivo">
+    <div class="modal-popup">
+      <div class="modal-cabecalho">
+        <span class="modal-titulo">Gerar Planilha</span>
+        <button class="modal-fechar" onclick="fecharModalOpcoes()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-corpo">
+        <div class="modal-opcoes-tipo">
+          <label class="modal-opcoes-tipo-label">Tipo de processamento</label>
+          <div class="modal-tipo-opcoes">
+            <label class="modal-tipo-btn selecionado" id="tipo-btn-geral">
+              <input type="radio" name="tipo-processamento" value="geral" checked />
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              Geral
+            </label>
+            <label class="modal-tipo-btn" id="tipo-btn-etiquetas">
+              <input type="radio" name="tipo-processamento" value="etiquetas" />
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+              Etiquetas ML/Shopee
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-divider"></div>
+
+        <div class="modal-opcoes-formato">
+          <label class="modal-opcoes-formato-label">Formato de saida</label>
+          <div class="modal-formato-opcoes" id="modal-formato-opcoes">
+          </div>
+        </div>
+
+        <div class="modal-modo" id="modal-modo-container" style="display: none;">
+          <label class="modal-modo-label">Modo de geracao</label>
+          <div class="modal-modo-opcoes">
+            <label class="modal-modo-btn selecionado" id="modo-btn-separado">
+              <input type="radio" name="modo-geracao" value="separado" checked />
+              Um arquivo por envio
+            </label>
+            <label class="modal-modo-btn" id="modo-btn-unico">
+              <input type="radio" name="modo-geracao" value="unico" />
+              Tudo em um unico arquivo
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-rodape">
+        <button class="modal-btn modal-btn-secundario" onclick="fecharModalOpcoes()">Cancelar</button>
+        <button class="modal-btn modal-btn-principal" onclick="confirmarOpcoes()">Gerar Planilha</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/icone.js"></script>
+  <script src="js/aplicativo.js"></script>
+</body>
+</html>

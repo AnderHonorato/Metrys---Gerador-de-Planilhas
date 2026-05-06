@@ -1,0 +1,60 @@
+{
+  "name": "bot-pdf-para-planilha",
+  "productName": "Metrys Planilhas",
+  "version": "1.0.0",
+  "description": "Metrys Planilhas - Bot local com chat IA + gerador de planilhas Excel. Desenvolvido por Anderson Honorato.",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "check": "node scripts/self-check.js",
+    "build": "electron-builder --win --dir",
+    "build:installer": "electron-builder --win nsis"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.82",
+    "@tesseract.js-data/eng": "^1.0.0",
+    "@tesseract.js-data/por": "^1.0.0",
+    "brace-expansion": "^1.1.11",
+    "dotenv": "^16.6.1",
+    "exceljs": "^4.4.0",
+    "pdfjs-dist": "^4.10.38",
+    "sharp": "^0.33.5",
+    "tesseract.js": "^6.0.0",
+    "uuid": "^11.0.5"
+  },
+  "devDependencies": {
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.metrys.planilhas",
+    "productName": "Metrys Planilhas",
+    "directories": {
+      "output": "dist6"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "estilos.css",
+      "styles.css",
+      "assets/**/*",
+      "js/**/*",
+      "src/**/*",
+      "node_modules/**/*",
+      ".env",
+      "!dist/**/*",
+      "!dist2/**/*",
+      "!dist3/**/*",
+      "!dist4/**/*",
+      "!dist5/**/*",
+      "!dist6/**/*"
+    ],
+    "asar": false,
+    "win": {
+      "target": "dir",
+      "icon": "assets/icon.png"
+    }
+  }
+}
